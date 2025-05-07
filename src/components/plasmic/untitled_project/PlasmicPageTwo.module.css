@@ -19,3 +19,7 @@
 .root > * {
   grid-column: 4;
 }
+.text {
+  position: relative;
+  font-size: 100px;
+}

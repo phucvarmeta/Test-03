@@ -73,6 +73,8 @@ export const PlasmicPageOne__ArgProps = new Array<ArgPropType>();
 
 export type PlasmicPageOne__OverridesType = {
   root?: Flex__<"div">;
+  text?: Flex__<"div">;
+  link?: Flex__<"a">;
 };
 
 export interface DefaultPageOneProps {
@@ -125,20 +127,78 @@ function PlasmicPageOne__RenderFunc(props: {
             projectcss.plasmic_tokens,
             sty.root
           )}
-        />
+        >
+          <div
+            data-plasmic-name={"text"}
+            data-plasmic-override={overrides.text}
+            className={classNames(
+              projectcss.all,
+              projectcss.__wab_text,
+              sty.text
+            )}
+          >
+            {"Page One"}
+          </div>
+          <PlasmicLink__
+            data-plasmic-name={"link"}
+            data-plasmic-override={overrides.link}
+            className={classNames(
+              projectcss.all,
+              projectcss.a,
+              projectcss.__wab_text,
+              sty.link
+            )}
+            href={"https://www.plasmic.app/"}
+            onClick={async event => {
+              const $steps = {};
+
+              $steps["goToPageTwo"] = true
+                ? (() => {
+                    const actionArgs = { destination: `/page-two` };
+                    return (({ destination }) => {
+                      if (
+                        typeof destination === "string" &&
+                        destination.startsWith("#")
+                      ) {
+                        document
+                          .getElementById(destination.substr(1))
+                          .scrollIntoView({ behavior: "smooth" });
+                      } else {
+                        location.assign(destination);
+                      }
+                    })?.apply(null, [actionArgs]);
+                  })()
+                : undefined;
+              if (
+                $steps["goToPageTwo"] != null &&
+                typeof $steps["goToPageTwo"] === "object" &&
+                typeof $steps["goToPageTwo"].then === "function"
+              ) {
+                $steps["goToPageTwo"] = await $steps["goToPageTwo"];
+              }
+            }}
+            platform={"react"}
+          >
+            {"Go To Page Two"}
+          </PlasmicLink__>
+        </div>
       </div>
     </React.Fragment>
   ) as React.ReactElement | null;
 }
 
 const PlasmicDescendants = {
-  root: ["root"]
+  root: ["root", "text", "link"],
+  text: ["text"],
+  link: ["link"]
 } as const;
 type NodeNameType = keyof typeof PlasmicDescendants;
 type DescendantsType<T extends NodeNameType> =
   (typeof PlasmicDescendants)[T][number];
 type NodeDefaultElementType = {
   root: "div";
+  text: "div";
+  link: "a";
 };
 
 type ReservedPropsType = "variants" | "args" | "overrides";
@@ -201,6 +261,8 @@ export const PlasmicPageOne = Object.assign(
   makeNodeComponent("root"),
   {
     // Helper components rendering sub-elements
+    text: makeNodeComponent("text"),
+    link: makeNodeComponent("link"),
 
     // Metadata about props expected for PlasmicPageOne
     internalVariantProps: PlasmicPageOne__VariantProps,
